@@ -21,8 +21,9 @@ public class CharController : MonoBehaviour {
 	void Update ()
 	{
 		float verticalAxis = Input.GetAxis("Vertical");
+		float horizontalAxis = Input.GetAxis("Horizontal");
 
-		if (verticalAxis != 0)
+		if (verticalAxis != 0 || horizontalAxis != 0)
 		{
 			if (Input.GetKey(KeyCode.LeftShift))
 				currentMovementState = MovementState.Running;
@@ -34,6 +35,11 @@ public class CharController : MonoBehaviour {
 
 		animController.SetInteger("MovementState", (int)currentMovementState);
 		animController.SetFloat("VerticalAxis", verticalAxis);
+		animController.SetFloat("HorizontalAxis", horizontalAxis);
+
+		Vector3 camForward = Camera.main.transform.forward;
+		camForward.y = 0;
+		transform.LookAt(transform.position + camForward);
 	}
 
 //	void OnAnimatorMove()
