@@ -8,11 +8,14 @@ public class CharController : MonoBehaviour {
 
 	void OnAnimatorMove ()
 	{
-		Vector3 velocity = charAnimator.deltaPosition / Time.deltaTime;
-		velocity.y = rigidbody.velocity.y;
-		velocity.z = 0;
-		
-		rigidbody.velocity = velocity;
+		if (!rigidbody.isKinematic)
+		{
+			Vector3 velocity = charAnimator.deltaPosition / Time.deltaTime;
+			velocity.y = rigidbody.velocity.y;
+			velocity.z = 0;
+			
+			rigidbody.velocity = velocity;
+		}
 	}
 
 	void OnTriggerEnter (Collider collider)
@@ -34,6 +37,11 @@ public class CharController : MonoBehaviour {
 
 			StartCoroutine(ShortPause());
 		}
+		else if (collider.tag == "EndScene")
+		{
+			sceneManager.SetSceneState(SceneManager.SceneState.EndScene);
+			rigidbody.isKinematic = true;
+		}
 	}
 
 	public void OrbAcquired ()
@@ -43,7 +51,7 @@ public class CharController : MonoBehaviour {
 
 	IEnumerator ShortPause ()
 	{
-		yield return new WaitForSeconds(2f);
+		yield return new WaitForSeconds(1.5f);
 		sceneManager.SetSceneState(SceneManager.SceneState.TurnToRun);
 
 		Transform char1 = GameObject.Find("UnityGuy1").transform;

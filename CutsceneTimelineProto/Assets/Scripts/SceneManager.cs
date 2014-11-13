@@ -14,18 +14,14 @@ public class SceneManager : MonoBehaviour {
 		EnterChar2 = 6,
 		Char2Idle = 7,
 		TurnToRun = 8,
-		Char2ChaseChar1 = 9
+		Char2ChaseChar1 = 9,
+		EndScene = 10
 	}
 	
 	public SceneState currentSceneState;
 	public Animator charAnimator;
 	public Animator doorAnimator;
 	public Animator char2Animator;
-
-	void Update ()
-	{
-
-	}
 
 	public void SetSceneState (SceneState state)
 	{
