@@ -3,6 +3,7 @@ using System.Collections;
 
 public class SceneManager : MonoBehaviour {
 
+	//the sequence of events this cutscene follows
 	public enum SceneState
 	{
 		IdleStart = 0,
@@ -18,15 +19,17 @@ public class SceneManager : MonoBehaviour {
 		EndScene = 10
 	}
 	
-	public SceneState currentSceneState;
-	public Animator charAnimator;
-	public Animator doorAnimator;
-	public Animator char2Animator;
+	public SceneState currentSceneState;	//the current point in the sequence
+	public Animator char1Animator;			//links to Char 1 Animator component
+	public Animator doorAnimator;			//links to door Animator component
+	public Animator char2Animator;			//links to Char 2 Animator component
 
+	//triggers events in the sequence
 	public void SetSceneState (SceneState state)
 	{
+		//sets the current scene state and then applies its value to all stored Animator components
 		currentSceneState = state;
-		charAnimator.SetInteger("SceneState", (int)currentSceneState);
+		char1Animator.SetInteger("SceneState", (int)currentSceneState);
 		doorAnimator.SetInteger("SceneState", (int)currentSceneState);
 		char2Animator.SetInteger("SceneState", (int)currentSceneState);
 	}
