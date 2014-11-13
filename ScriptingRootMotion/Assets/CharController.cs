@@ -42,11 +42,11 @@ public class CharController : MonoBehaviour {
 		transform.LookAt(transform.position + camForward);
 	}
 
-//	void OnAnimatorMove()
-//	{
-//		Vector3 velocity = animController.deltaPosition / Time.deltaTime;
-//		velocity.y = rigidbody.velocity.y;
-//
-//		rigidbody.velocity = velocity;
-//	}
+	void OnAnimatorMove()
+	{
+		Vector3 velocity = animController.deltaPosition / Time.deltaTime;
+		velocity.y = rigidbody.velocity.y;
+
+		rigidbody.velocity = velocity;
+	}
 }
