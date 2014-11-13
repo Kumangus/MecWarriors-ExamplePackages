@@ -6,6 +6,14 @@ public class CharController : MonoBehaviour {
 	public Animator charAnimator;		//stores Animator component
 	public SceneManager sceneManager;	//links to SceneManager object
 
+	float startZPos;	//stores initial Char Z position, for walking a straight line
+
+	void Start ()
+	{
+		//set initial Char Z position
+		startZPos = transform.position.z;
+	}
+
 	void OnAnimatorMove ()
 	{
 		//only run if the rigidbody can accept velocity changes
@@ -14,11 +22,16 @@ public class CharController : MonoBehaviour {
 			//TODO: re-comment this after finding issues...
 			Vector3 velocity = (charAnimator.deltaPosition / Time.deltaTime);
 			velocity.y = rigidbody.velocity.y;
-			velocity.z = 0;
 
 			//set the rigidbody's velocity based on calculations
 			rigidbody.velocity = velocity;
 		}
+	}
+
+	void LateUpdate ()
+	{
+		//resets Char Z position every frame to maintaint a straight walking line
+		transform.position = new Vector3(transform.position.x, transform.position.y, startZPos);
 	}
 
 	void OnTriggerEnter (Collider collider)
