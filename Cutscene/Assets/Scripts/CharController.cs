@@ -19,7 +19,7 @@ public class CharController : MonoBehaviour {
 		//only run if the rigidbody can accept velocity changes
 		if (!rigidbody.isKinematic)
 		{
-			//TODO: re-comment this after finding issues...
+			//get the currently playing animation clip's motion values and modify them to use gravity
 			Vector3 velocity = (charAnimator.deltaPosition / Time.deltaTime);
 			velocity.y = rigidbody.velocity.y;
 
