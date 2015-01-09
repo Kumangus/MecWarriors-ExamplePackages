@@ -18,8 +18,8 @@ public class TSpriteAnim : MonoBehaviour {
 	public int tex_NumColumns = 1;
 	int totalFrames;
 
-	public enum StartPoint {TopLeft, BottomLeft}
-	public StartPoint startPoint;
+	public enum SheetStartPoint {TopLeft, BottomLeft}
+	public SheetStartPoint sheetStartPoint;
 
 	float frameWidthOffset;
 	float frameHeightOffset;
@@ -92,9 +92,9 @@ public class TSpriteAnim : MonoBehaviour {
 	{
 		int yOffsetMultiplier = 0;
 
-		if (startPoint == StartPoint.TopLeft)
+		if (sheetStartPoint == SheetStartPoint.TopLeft)
 			yOffsetMultiplier = tex_NumRows - 1 -(currentAnimFrame/tex_NumColumns);
-		else if (startPoint == StartPoint.BottomLeft)
+		else if (sheetStartPoint == SheetStartPoint.BottomLeft)
 			yOffsetMultiplier = currentAnimFrame/tex_NumColumns;
 
 		if (Time.time - lastFrameTime >= frameDuration)
@@ -257,16 +257,17 @@ public class TSpriteAnim : MonoBehaviour {
 		}
 	}
 
-//	public void ResetAnimation ()
-//	{}
-//
-//	public int GetAnimationFrame ()
-//	{
-//		return currentAnimFrame;
-//	}
-//
-//	public void SetAnimationFrame (int frame)
-//	{
-//		currentAnimFrame = frame;
-//	}
+	public void ResetAnimation ()
+	{
+		if (animState != AnimState.Waiting)
+			animState = AnimState.Waiting;
+
+		currentAnimFrame = 0;
+	}
+
+	public int CurrentAnimFrame
+	{
+		get{return currentAnimFrame;}
+		set{currentAnimFrame = value;}
+	}
 }
