@@ -26,6 +26,7 @@ public class TSpriteAnim : MonoBehaviour {
 
 	enum AnimState {Waiting, Animating, Paused, Rewinding}
 	AnimState animState;
+	AnimState animStateOnPause;
 
 	int currentAnimFrame;
 	float lastFrameTime;
@@ -53,11 +54,11 @@ public class TSpriteAnim : MonoBehaviour {
 		switch (animState)
 		{
 			case AnimState.Animating:
-				ForwardAnimation();
+				AnimateForward();
 				break;
 
 			case AnimState.Rewinding:
-				ReverseAnimation();
+				AnimateReverse();
 				break;
 
 			case AnimState.Paused:
@@ -76,7 +77,15 @@ public class TSpriteAnim : MonoBehaviour {
 			PlayAnimation();
 
 		if (GUILayout.Button("Rewind Anim"))
-			RewindAnimationToStart();
+			RewindAnimation();
+
+		if (GUILayout.Button("Pause/Unpause Anim"))
+		{
+			if (animState != AnimState.Paused)
+				PauseAnimation();
+			else
+				UnpauseAnimation();
+		}
 	}
 
 	void Animate (int posNegOne)
@@ -103,12 +112,13 @@ public class TSpriteAnim : MonoBehaviour {
 			                                             frameHeightOffset * yOffsetMultiplier);
 	}
 
-	void ForwardAnimation ()
+	void AnimateForward ()
 	{
 		Debug.Log("Playing forward animation");
 
 		Animate(1);
 
+		//TODO: extract into its own function
 		if (currentAnimFrame == totalFrames - 1)
 		{
 			switch (animType)
@@ -123,18 +133,19 @@ public class TSpriteAnim : MonoBehaviour {
 					
 				case AnimType.PingPongOnce:
 				case AnimType.PingPongLoop:
-					RewindAnimationToStart(animType);
+					RewindAnimation(animType);
 					break;
 				}
 		}
 	}
 
-	void ReverseAnimation ()
+	void AnimateReverse ()
 	{
 		Debug.Log("Playing backward animation");
 		
 		Animate(-1);
 
+		//TODO: extract into its own function
 		if (currentAnimFrame == 0)
 		{
 			switch (animType)
@@ -189,41 +200,47 @@ public class TSpriteAnim : MonoBehaviour {
 //		{
 			animState = AnimState.Animating;
 			animType = setAnimType;
-			currentAnimFrame = 0;
+
+			if (currentAnimFrame == totalFrames - 1)
+			Debug.LogError("Animation is at the last frame! Use ResetAnimation() and then start from the beginning.");
+//			currentAnimFrame = 0;
 			
 			CalculateNewFrameDuration(fps);
 			lastFrameTime = Time.time;
 //		}
 	}
 
-//	public void PauseAnimation ()
-//	{
-//		animState = AnimState.Paused;
-//		Debug.Log("Paused");
-//	}
-
-//	public void UnpauseAnimation ()
-//	{
-//		Debug.Log("Unpaused");
-//	}
-
-
-	public void RewindAnimationToStart ()
+	public void PauseAnimation ()
 	{
-		RewindAnimationToStart(originalFPS, AnimType.Once);
+		animStateOnPause = animState;
+		animState = AnimState.Paused;
+		Debug.Log("Paused : " + animStateOnPause);
 	}
 
-	public void RewindAnimationToStart (AnimType setAnimType)
+	public void UnpauseAnimation ()
 	{
-		RewindAnimationToStart(originalFPS, setAnimType);
+		animState = animStateOnPause;
+		animStateOnPause = AnimState.Waiting;
+		Debug.Log("Unpaused");
 	}
 
-	public void RewindAnimationToStart (int fps)
+
+	public void RewindAnimation ()
 	{
-		RewindAnimationToStart(fps, AnimType.Once);
+		RewindAnimation(originalFPS, AnimType.Once);
 	}
 
-	public void RewindAnimationToStart (int fps, AnimType setAnimType)
+	public void RewindAnimation (AnimType setAnimType)
+	{
+		RewindAnimation(originalFPS, setAnimType);
+	}
+
+	public void RewindAnimation (int fps)
+	{
+		RewindAnimation(fps, AnimType.Once);
+	}
+
+	public void RewindAnimation (int fps, AnimType setAnimType)
 	{
 		//TODO: make sure that fps can't go below 1 in custom inspector!
 //		if (fps < 1)
